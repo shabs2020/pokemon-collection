@@ -1,0 +1,39 @@
+# Dependencies
+frontend/node_modules
+pokemon/target
+
+# Build output
+frontend/dist
+
+# Environment variables (keep .env.example)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Java / Maven
+pokemon/target/
+*.class
+*.jar
+!pokemon/.mvn/wrapper/maven-wrapper.jar
+
+# Secrets / keys
+*.pem
+*.key
+*.p12
+*.jks
