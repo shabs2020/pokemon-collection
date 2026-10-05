@@ -4,7 +4,7 @@ Fullstack app: trainers log in/out, browse Pokémon (via PokéAPI), and maintain
 
 ## Prerequisites
 - Java 21
-- Node 18+
+- Node 22+
 - npm
 
 ## Setup
