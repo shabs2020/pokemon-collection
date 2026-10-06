@@ -3,6 +3,7 @@ package com.pokemon.collection.controller;
 import com.pokemon.collection.PokemonCollectionApplication;
 import com.pokemon.collection.domain.CollectionItem;
 import com.pokemon.collection.domain.Trainer;
+import com.pokemon.collection.exception.DuplicateCollectionItemException;
 import com.pokemon.collection.repository.TrainerRepository;
 import com.pokemon.collection.service.CollectionService;
 import com.pokemon.collection.service.JwtService;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -108,5 +110,37 @@ class CollectionControllerMvcTest {
     void unauthenticated_ShouldReturn401() throws Exception {
         mockMvc.perform(get("/api/collection"))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void add_ShouldReturn409ForDuplicatePokemon() throws Exception {
+        when(collectionService.add(eq("ash"), eq(25)))
+                .thenThrow(new DuplicateCollectionItemException(1L, 25));
+
+        mockMvc.perform(post("/api/collection/25")
+                        .header("Authorization", bearerToken))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.trainerId").value(1))
+                .andExpect(jsonPath("$.pokemonId").value(25));
+    }
+
+    @Test
+    void add_ShouldReturn400ForInvalidPokemonId() throws Exception {
+        when(collectionService.add(eq("ash"), eq(0)))
+                .thenThrow(new IllegalArgumentException("Pokemon ID must be positive"));
+
+        mockMvc.perform(post("/api/collection/0")
+                        .header("Authorization", bearerToken))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void remove_ShouldReturn404ForUnknownItem() throws Exception {
+        doThrow(new java.util.NoSuchElementException("Item not found"))
+                .when(collectionService).remove("ash", 999L);
+
+        mockMvc.perform(delete("/api/collection/999")
+                        .header("Authorization", bearerToken))
+                .andExpect(status().isNotFound());
     }
 }

@@ -91,4 +91,37 @@ class AuthControllerMvcTest {
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    void login_ShouldReturn400WhenUsernameMissing() throws Exception {
+        AuthController.LoginRequest request = new AuthController.LoginRequest();
+        request.setPassword("pikachu123");
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void login_ShouldReturn400WhenPasswordMissing() throws Exception {
+        AuthController.LoginRequest request = new AuthController.LoginRequest();
+        request.setUsername("ash");
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void login_ShouldReturn415WhenContentTypeMissing() throws Exception {
+        AuthController.LoginRequest request = new AuthController.LoginRequest();
+        request.setUsername("ash");
+        request.setPassword("pikachu123");
+
+        mockMvc.perform(post("/api/auth/login")
+                        .content(new ObjectMapper().writeValueAsString(request)))
+                .andExpect(status().isUnsupportedMediaType());
+    }
 }

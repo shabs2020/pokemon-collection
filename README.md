@@ -53,3 +53,14 @@ npm run dev
 ## Notes
 - PokéAPI is called directly from the browser (requires internet).
 - Trainers can only see their own collection.
+
+## Implementation Time
+
+Approx. 2 hours total, with AI assistance (Mistral AI) used for code generation and reviewed/adapted manually.
+
+| Area | Time |
+|------|------|
+| Backend: Spring Boot project setup, JWT auth, collection CRUD, H2 schema, exception handling | ~25 min |
+| Frontend: Vite + Vue 3 setup, login, PokéAPI browse, collection UI, Pinia stores | ~25 min |
+| Testing & Enhancements: manual end-to-end testing, verification and enhancements | ~50 min |
+| Project wiring: `.gitignore`, env config, `run.sh`, README, repo setup | ~20 min |
